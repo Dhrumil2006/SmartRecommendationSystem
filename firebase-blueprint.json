@@ -1,0 +1,98 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "User account registration details, interests, and app settings.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "The unique user ID" },
+        "email": { "type": "string", "description": "The user's email address" },
+        "username": { "type": "string", "description": "The chosen display name" },
+        "interests": { "type": "array", "description": "List of genres or categories interested in" },
+        "createdAt": { "type": "string", "description": "ISO timestamp of user registration" },
+        "theme": { "type": "string", "description": "User interface preference: light or dark", "enum": ["light", "dark"] }
+      },
+      "required": ["id", "email", "username", "interests", "createdAt"]
+    },
+    "Item": {
+      "title": "Item Definition",
+      "description": "An item (movie, book, or product) that can be rated, favorited, and recommended.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique item ID" },
+        "title": { "type": "string", "description": "Title of the item" },
+        "description": { "type": "string", "description": "Detailed description of the item" },
+        "category": { "type": "string", "description": "Category of the item (e.g. Movie, Book, Game)" },
+        "tags": { "type": "array", "description": "List of tag keywords for matching" },
+        "averageRating": { "type": "number", "description": "Weighted average rating from 1 to 5" },
+        "ratingCount": { "type": "number", "description": "Total number of reviews/ratings submitted" },
+        "imageUrl": { "type": "string", "description": "URL or placeholder of the item image" }
+      },
+      "required": ["id", "title", "description", "category", "tags"]
+    },
+    "Rating": {
+      "title": "User Rating",
+      "description": "Rating of 1-5 stars given by a user to an item, along with review and sentiment.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique rating ID" },
+        "userId": { "type": "string", "description": "ID of the user who rated the item" },
+        "itemId": { "type": "string", "description": "ID of the item being rated" },
+        "rating": { "type": "number", "description": "Rating between 1 and 5" },
+        "review": { "type": "string", "description": "Detailed written review of the item" },
+        "sentiment": { "type": "string", "description": "AI analysis of rating sentiment" },
+        "explanation": { "type": "string", "description": "AI explanation behind rating or reaction if generated" },
+        "createdAt": { "type": "string", "description": "ISO timestamp of rating creation" }
+      },
+      "required": ["id", "userId", "itemId", "rating", "review", "createdAt"]
+    },
+    "Favorite": {
+      "title": "User Favorite",
+      "description": "Indicates a user has favorited a specific item.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique favorite connection ID" },
+        "userId": { "type": "string", "description": "ID of the user who favorited the item" },
+        "itemId": { "type": "string", "description": "ID of the item favorited" },
+        "createdAt": { "type": "string", "description": "ISO timestamp of favorite action" }
+      },
+      "required": ["id", "userId", "itemId", "createdAt"]
+    },
+    "RecommendationLog": {
+      "title": "Recommendation Log",
+      "description": "Log of recommendation responses generated for a user based on their query or profile.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique log ID" },
+        "userId": { "type": "string", "description": "ID of the user receiving recommendations" },
+        "query": { "type": "string", "description": "The prompt or query string submitted, or automatic" },
+        "recommendedItemIds": { "type": "array", "description": "List of recommended item IDs" },
+        "explanations": { "type": "array", "description": "Explanations matching each item" },
+        "createdAt": { "type": "string", "description": "ISO timestamp of log generation" }
+      },
+      "required": ["id", "userId", "query", "recommendedItemIds", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Access profile and dashboard settings for users."
+    },
+    "/items/{itemId}": {
+      "schema": "Item",
+      "description": "Directory of items ready to be matched, recommended, and rated."
+    },
+    "/ratings/{ratingId}": {
+      "schema": "Rating",
+      "description": "All item reviews and ratings left by users."
+    },
+    "/favorites/{favoriteId}": {
+      "schema": "Favorite",
+      "description": "Bookmark collection linking users to items."
+    },
+    "/recommendations/{recommendationId}": {
+      "schema": "RecommendationLog",
+      "description": "Logged AI and content recommendations for historical recall."
+    }
+  }
+}
